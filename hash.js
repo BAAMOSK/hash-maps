@@ -43,7 +43,14 @@ class HashMap {
         };
         this.length++;
     }
-
+    get(key) {
+        const index = this._findSlot(key);
+        if (this._slots[index] === undefined) {
+          //throw new Error('Key error');
+          return undefined;
+        }
+        return this._slots[index].value;
+      }
     _findSlot(key) {
         //takes key and hashes it
         const hash = HashMap._hashString(key);
@@ -95,15 +102,71 @@ HashMap.MAX_LOAD_RATIO = 0.9;
 HashMap.SIZE_RATIO = 3;
 
 const hashes = new HashMap();
-console.log(hashes);
+// console.log(hashes);
+// hashes.set('cat');
+// hashes.set('tac');
+// console.log(hashes);
 
 // console.log(hashes._findSlot('bob'));
-console.log(hashes.set('1'));
-console.log(hashes.set('2'));
-console.log(hashes.set('3'));
-console.log(hashes.set('4'));
-console.log(hashes.set('5'));
-console.log(hashes.set('6'));
-console.log(hashes.set('7'));
-console.log(hashes.set('8'));
-console.log(hashes);
+// console.log(hashes.set('1'));
+// console.log(hashes.set('2'));
+// console.log(hashes.set('3'));
+// console.log(hashes.set('4'));
+// console.log(hashes.set('5'));
+// console.log(hashes.set('6'));
+// console.log(hashes.set('7'));
+// console.log(hashes.set('8'));
+// console.log(hashes);
+
+//palindrome checker algorithm
+function palindrome(str) {
+  let keys = [];
+  let alreadyOneOdd = false;
+  str = str.toLowerCase();
+  let hm = new HashMap();
+  for (let i = 0; i < str.length; i++) {
+    let el = str[i];
+    if (hm.get(el) === undefined) {
+      hm.set(el, 1);
+      keys.push(el);
+    } else {
+      hm.set(el, hm.get(el) + 1);
+    }
+  };
+  return keys.reduce((acc, el) => {
+    let obj = hm.get(el);
+    console.log(obj % 2);
+    if (obj % 2 !== 0) {
+      if (!alreadyOneOdd) {
+        alreadyOneOdd = !alreadyOneOdd;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  })
+}
+//Write an algorithm to group a list of words into anagrams.
+//For example, if the input was
+let words = ['east', 'cars', 'acre', 'arcs', 'teas', 'eats', 'race'];
+// the output should be: [['east', 'teas', 'eats'],
+// ['cars', 'arcs'], ['acre', 'race']].
+
+function anagrams(key) {
+  const hm = new HashMap();
+  for(let i = 0; i < key.length; i++) {
+    let word = key[i].split('').sort((a,b) => a.charCodeAt(0) - b.charCodeAt(0)).join('');
+    if(hm.get(word) === undefined) {
+      hm.set(word, [key[i]]);
+    } else {
+      let value = hm.get(word);
+      value.push(key[i]);
+      hm.set(word, value);
+    }
+
+  }
+
+  return hm;
+};
+
+console.log(anagrams(words));

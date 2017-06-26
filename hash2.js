@@ -5,6 +5,23 @@ class Hash {
     this._capacity = 8;
     this._deleted = 0;
   }
+
+  _resize(size) {
+    //makes a reference to old array
+    const oldSlots = this._slots;
+    this._capacity = size;
+    // Reset the length - it will get rebuilt as you add the items back
+    this.length = 0;
+    this._slots = [];
+    //reiterate
+    for (const slot of oldSlots) {
+      if (slot !== undefined) {
+        //rehashes based on size of 24 instead of 8
+        this.set(slot.key, slot.value);
+      }
+    }
+  }
+
   static _hashString(string) {
 
     //prime number
@@ -89,6 +106,12 @@ class Hash {
 }
 
 let x = new Hash();
+x.set("foo", "buzz");
+x.set("foo", "bar");
+x.set("Bizz", "beetle");
+x.set("Bizz", "bop");
+x.set("ars", "technica");
+x.set("prosthetic", "knowledge");
 x.set("foo", "buzz");
 x.set("foo", "bar");
 x.set("Bizz", "beetle");
